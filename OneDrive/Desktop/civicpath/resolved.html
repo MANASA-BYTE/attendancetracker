@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolved Problems</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('resolved.jpg') no-repeat center center/cover;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .problem {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem h3, .problem p {
+            color: #fff;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resolved Problems</h1>
+        <div id="resolved-problems-list"></div>
+    </div>
+
+    <script>
+        async function loadResolvedProblems() {
+            const problemsList = document.getElementById('resolved-problems-list');
+            problemsList.innerHTML = '<p style="color: #fff;">Loading...</p>'; // Show loading indicator
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/problems/resolvedProblems');
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch resolved problems');
+                }
+
+                const problems = await response.json();
+                console.log('Resolved Problems:', problems); // Debugging log
+
+                problemsList.innerHTML = ''; // Clear the loading indicator
+
+                if (problems.length === 0) {
+                    problemsList.innerHTML = '<p style="color: #fff;">No resolved problems yet.</p>';
+                    return;
+                }
+
+                problems.forEach(problem => {
+                    const problemDiv = document.createElement('div');
+                    problemDiv.classList.add('problem');
+                    problemDiv.innerHTML = `
+                        <h3>Problem ID: ${problem.problemID || problem._id}</h3>
+                        <p>Description: ${problem.description}</p>
+                    `;
+                    problemsList.appendChild(problemDiv);
+                });
+            } catch (error) {
+                console.error('Error loading resolved problems:', error);
+                problemsList.innerHTML = '<p style="color: #fff;">Error loading resolved problems.</p>';
+            }
+        }
+
+        // Load problems when the page loads
+        loadResolvedProblems();
+    </script>
+</body> 
+</html>
