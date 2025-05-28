@@ -1,0 +1,214 @@
+/* .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-brand .nav-link {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #555;
+  } */
+   /* Navbar.css */
+/*.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-item:after {
+  content: "▼";
+  font-size: 0.6rem;
+  margin-left: 0.5rem;
+  opacity: 0.7;
+}
+
+.nav-item.no-dropdown:after {
+  content: none;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.login-btn {
+  background-color: #000;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.signup-btn {
+  background-color: #000;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}*/
+.navbar {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: transparent; /* Remove background color */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Add a light border at the bottom */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  overflow: visible; /* Ensure all content is visible */
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Space between nav items */
+  flex-grow: 1; /* Allow nav-links to take up available space */
+  margin-left: 2rem; /* Space between logo and nav-links */
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-item:after {
+  content: "▼";
+  font-size: 0.6rem;
+  margin-left: 0.5rem;
+  opacity: 0.7;
+}
+
+.nav-item.no-dropdown:after {
+  content: none;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space between Login and Signup buttons */
+  flex-shrink: 0; /* Prevent shrinking */
+  z-index: 1001; /* Ensure it appears above other elements */
+}
+
+.login-btn {
+  background-color: #000; /* Black background */
+  color: white; /* White text */
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #333; /* Darker hover effect */
+}
+
+.signup-btn {
+  background-color: #000; /* Black background */
+  color: white; /* White text */
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.signup-btn:hover {
+  background-color: #333; /* Darker hover effect */
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* Hide nav-links on smaller screens */
+  }
+
+  .auth-buttons {
+    margin-left: 0; /* Reset margin for smaller screens */
+  }
+}
