@@ -1,4 +1,6 @@
 flask
 ultralytics
 opencv-python
+gunicorn
+flask-cors
 pymongo

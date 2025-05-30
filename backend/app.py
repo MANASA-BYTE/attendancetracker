@@ -115,7 +115,7 @@ def upload_video():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)'''
-
+''''
 import os
 import uuid
 import io
@@ -241,4 +241,134 @@ def generate_weekly_report():
     return send_file(buf, mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # default to 5000 if PORT not set
+    app.run(host='0.0.0.0', port=port)'''
+import os
+import uuid
+import io
+from datetime import datetime, timedelta
+from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask_cors import CORS
+from werkzeug.utils import secure_filename
+from yolov8_processor import process_video
+from db import save_results_to_mongo
+from pymongo import MongoClient
+import matplotlib.pyplot as plt
+
+# Initialize Flask app
+app = Flask(__name__)
+
+# Enable CORS for frontend
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+
+# Folder configurations
+UPLOAD_FOLDER = 'uploads'
+OUTPUT_FOLDER = os.path.join(app.root_path, 'static', 'faces')
+ALLOWED_EXTENSIONS = {'mp4', 'mov', 'avi'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+# MongoDB connection
+client = MongoClient("mongodb://localhost:27017/")
+db = client["attendance_db"]
+collection = db["attendance_trackerr"]
+
+# Serve face images
+@app.route('/static/faces/<filename>')
+def get_face_image(filename):
+    return send_from_directory(app.config['OUTPUT_FOLDER'], filename)
+
+# Check allowed file types
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Upload video route
+@app.route('/upload_video', methods=['POST'])
+def upload_video():
+    if 'video' not in request.files:
+        return jsonify({'error': 'No video file uploaded'}), 400
+
+    video = request.files['video']
+
+    if video.filename == '' or not allowed_file(video.filename):
+        return jsonify({'error': 'Invalid video file'}), 400
+
+    class_name = request.form.get('class_name')
+    section = request.form.get('section')
+    time = request.form.get('time')
+
+    filename = secure_filename(video.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    video.save(filepath)
+
+    # Process the video
+    faces_data = process_video(filepath)
+
+    processed_results = []
+    for face_data in faces_data:
+        result = {
+            'image_url': face_data['image_url'],
+            'confidence': round(face_data['confidence'], 2),
+            'status': face_data['status'],
+            'timestamp': datetime.now(),
+            'student_id': face_data['student_id'],
+            'name': face_data['name'],
+            'class': class_name,
+            'section': section
+        }
+        processed_results.append(result)
+
+    # Save to MongoDB
+    save_results_to_mongo(processed_results, class_name, section, time)
+
+    return jsonify({'faces': processed_results}), 200
+
+# Weekly report route
+@app.route('/generate_weekly_report', methods=['GET'])
+def generate_weekly_report():
+    one_week_ago = datetime.now() - timedelta(days=7)
+    records = list(collection.find({"timestamp": {"$gte": one_week_ago}}))
+
+    if not records:
+        return jsonify({"error": "No attendance data found for the past week."}), 404
+
+    data = {}
+    for record in records:
+        date = record['timestamp'].strftime('%Y-%m-%d')
+        status = record['status']
+        if date not in data:
+            data[date] = {'present': 0, 'absent': 0}
+        if status == 'active':
+            data[date]['present'] += 1
+        else:
+            data[date]['absent'] += 1
+
+    dates = sorted(data.keys())
+    present_counts = [data[day]['present'] for day in dates]
+    absent_counts = [data[day]['absent'] for day in dates]
+
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    plt.bar(dates, present_counts, color='green', label='Present')
+    plt.bar(dates, absent_counts, bottom=present_counts, color='red', label='Absent')
+    plt.xticks(rotation=45)
+    plt.xlabel('Date')
+    plt.ylabel('Number of Students')
+    plt.title('Weekly Attendance Report')
+    plt.legend()
+
+    # Save chart to buffer
+    buf = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
+
+# Run the app
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)  # Set debug=False to avoid WinError 10038
