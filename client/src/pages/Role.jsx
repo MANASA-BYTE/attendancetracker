@@ -106,7 +106,7 @@ function Role() {
             onMouseOut={(e) => Object.assign(e.target.style, adminButton)}
           >
             <UserCog style={iconStyle} />
-            <span>Teacher</span>
+            <span>Faculty</span>
           </button>
         </div>
       </div>
