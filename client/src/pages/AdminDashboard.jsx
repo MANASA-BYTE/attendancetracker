@@ -43,7 +43,7 @@ const AdminDashboard = () => {
     formData.append("time", time);
 
     try {
-      const response = await fetch("https://attendance-backend.onrender.com/upload_video", {
+      const response = await fetch("http://127.0.0.1:5000/upload_video", {
         method: "POST",
         method: "POST",
         body: formData,
