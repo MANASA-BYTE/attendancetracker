@@ -8,7 +8,10 @@ Students are marked:
 
 ✅ Present → If confidence score ≥ 0.5
 ❌ Absent → If confidence score < 0.5
+
+
 🚀 Features
+
 Video Upload via Admin Dashboard
 YOLOv8 Face Detection
 Activity & Attention Detection
@@ -17,20 +20,24 @@ Student Active / Inactive Detection
 Weekly Attendance Reports
 MongoDB Data Storage
 Student & Admin Dashboard
+
 🛠️ Tech Stack
+
 Frontend
 React.js
-Tailwind CSS
+
 Backend
-Flask (Python)
+python
 REST API
+
 Machine Learning
-YOLOv8
-OpenCV
-Facial Expression Detection
+YOLOv8 -Facial Expression Detection
+
 Database
 MongoDB
+
 ⚙️ How It Works
+
 Admin uploads classroom video
 Backend processes video using YOLOv8
 Faces are detected and analyzed
