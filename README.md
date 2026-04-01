@@ -1,4 +1,5 @@
 AI-Powered Attendance Tracker
+
 📌 Overview
 
 AI-Powered Attendance Tracker is a web application that automatically marks student attendance using YOLOv8 face detection and activity analysis. The system analyzes classroom videos to detect student focus, activity level, and engagement.
